@@ -2,11 +2,7 @@
 #include <functional>
 #include <iostream>
 #include <string>
-
-bool LogFile(const std::wstring& wstrDir, int count) {
-  std::wcout << wstrDir << std::endl;
-  return true;
-}
+#include "callback.h"
 
 bool QueryFile(const std::wstring& wstrDir,
                bool (*file_callback)(const std::wstring&, int)) {
@@ -25,17 +21,22 @@ bool QueryFile(const std::wstring& wstrDir,
         wcscmp(findData.cFileName, L"..") == 0) {
       continue;
     }
+
     std::wstring wstrFileName;
     wstrFileName.assign(wstrDir);
     wstrFileName.append(L"\\");
     wstrFileName.append(findData.cFileName);
-    int count = 0;
+
+    int file_count = 0;
+    const int FILE_MAX_LIMIT = 500000;
+
+    if (file_count > FILE_MAX_LIMIT) break;
     if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {  // 是否是目錄
       wstrFileName.append(L"\\");
       QueryFile(wstrFileName, file_callback);
     } else {
-      count++;
-      auto ret = file_callback(wstrFileName, count);
+      file_count++;
+      auto ret = file_callback(wstrFileName, file_count);
       if (ret == false) break;
     }
   } while (FindNextFile(hFind, &findData) != 0);
@@ -46,10 +47,8 @@ bool QueryFile(const std::wstring& wstrDir,
 
 int main() {
   setlocale(LC_ALL, setlocale(LC_CTYPE, ""));
-  try {
-    QueryFile(L"C:\\Users\\kikihuang\\Documents", LogFile);
-  } catch (const std::exception& e) {
-    std::cerr << e.what();
-  }
+
+  QueryFile(L"C:\\Users\\kikihuang\\Documents", LogFile);
+
   return 0;
 }
