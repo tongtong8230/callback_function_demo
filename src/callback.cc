@@ -1,6 +1,8 @@
 #include "src/callback.h"
 
-bool LogFile(const std::wstring& wstrDir, int count) {
-  std::wcout << wstrDir << std::endl;
+bool CountFile(const std::wstring& wstrDir, HANDLE hFind,
+               WIN32_FIND_DATA findData, void* fileCountPtr) {
+  int* fileCountIntPtr = (int*)fileCountPtr;
+  (*fileCountIntPtr)++;
   return true;
 }

@@ -1,7 +1,9 @@
 #ifndef _CALLBACK_H_
 #define _CALLBACK_H_
+#include <windows.h>
 #include <iostream>
 #include <string>
 
-bool LogFile(const std::wstring& wstrDir, int count);
-#endif // _CALLBACK_H_
+bool CountFile(const std::wstring& wstrDir, HANDLE hFind,
+             WIN32_FIND_DATA findData, void* fileCountPtr);
+#endif  // _CALLBACK_H_
