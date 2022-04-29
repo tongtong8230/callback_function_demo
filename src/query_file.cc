@@ -1,9 +1,11 @@
-#include <windows.h>
+#include "src/query_file.h"
 #include <string>
 #include "src/callback.h"
 
-bool QueryFile(const std::wstring& wstrDir,
-               bool (*file_callback)(const std::wstring&, int)) {
+bool QueryFile(
+    const std::wstring& wstrDir, void* retValue,
+    std::function<bool(const std::wstring&, HANDLE, WIN32_FIND_DATA, void*)>
+        file_callback) {
   if (wstrDir.empty()) {
     return false;
   }
@@ -31,14 +33,15 @@ bool QueryFile(const std::wstring& wstrDir,
     if (file_count > FILE_MAX_LIMIT) break;
     if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {  // 是否是目錄
       wstrFileName.append(L"\\");
-      QueryFile(wstrFileName, file_callback);
+      QueryFile(wstrFileName, retValue, file_callback);
     } else {
       file_count++;
-      auto ret = file_callback(wstrFileName, file_count);
+      auto ret = file_callback(wstrFileName, hFind, findData, retValue);
       if (ret == false) break;
     }
   } while (FindNextFile(hFind, &findData) != 0);
-
+  
+  
   FindClose(hFind);
   return true;
 }
