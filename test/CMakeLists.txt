@@ -1,5 +1,7 @@
 include_directories(${PROJECT_SOURCE_DIR})
-include_directories("${PROJECT_SOURCE_DIR}/test")
+include_directories(${TEST_DIR})
+include_directories(${SRC_DIR})
+
 
 # find_package(Threads)
 include(FetchContent)
@@ -16,5 +18,6 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 # add the executable
-add_executable(t_main t_main.cc)
+add_executable(t_main t_main.cc ${SRC_DIR}/query_file.cc ${SRC_DIR}/callback.cc)
 target_link_libraries(t_main gtest gtest_main) #CMAKE_THREAD_LIBS_INIT)
+target_compile_options(t_main PRIVATE -D_UNICODE)
