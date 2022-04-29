@@ -10,8 +10,5 @@ include_directories(PROJECT_SOURCE_DIR)
 set(CMAKE_CXX_FLAGS_RELEASE "/MT")
 set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
 
-
-# add the executable
-add_executable(main main.cc)
-target_link_libraries(main)
-target_compile_options(main PRIVATE -D_UNICODE)
+add_subdirectory(src)
+add_subdirectory(test)
