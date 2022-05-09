@@ -5,5 +5,5 @@
 #include <string>
 
 bool CountFile(const std::wstring& wstrDir,
-             WIN32_FIND_DATA findData, void* fileCountPtr);
+             WIN32_FIND_DATA ffd, void* fileCountPtr);
 #endif  // _CALLBACK_H_
