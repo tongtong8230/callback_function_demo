@@ -9,24 +9,37 @@ bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
                    file_callback) {
   WIN32_FIND_DATA ffd;
   std::stack<std::wstring> directories;
-  HANDLE hFind = FindFirstFile(wstrTempDir.c_str(), &ffd);
-  if (hFind == INVALID_HANDLE_VALUE) return false;
-  do {
+
+  directories.push(wstrDir);
+  files.clear();
+
+  while (!directories.empty()) {
+    std::wstring wstrPath = directories.top();
+    std::wstring wstrTempDir = wstrPath + (L"\\*");
+    directories.pop();
+
+    HANDLE hFind = FindFirstFile(wstrTempDir.c_str(), &ffd);
+
+    if (hFind == INVALID_HANDLE_VALUE) continue;
+
+    do {
       if (wcscmp(ffd.cFileName, L".") == 0 || wcscmp(ffd.cFileName, L"..") == 0)
+        continue;
 
-    std::wstring wstrFileName = wstrDir + (L"\\") + findData.cFileName;
-
-    if (file_count > FILE_MAX_LIMIT) break;
-    if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {  // 是否是目錄
-      wstrFileName.append(L"\\");
-      QueryFile(wstrFileName, retValue, file_callback);
-    } else {
-      file_count++;
-      auto ret = file_callback(wstrFileName, hFind, findData, retValue);
-      if (ret == false) break;
-    }
+      if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {  // 是否是目錄
+        directories.push(wstrDir + L"\\" + ffd.cFileName);
+      } else {
+        files.push_back(wstrDir + L"\\" + ffd.cFileName);
+      }
     } while (FindNextFile(hFind, &ffd) != 0);
-  
-  FindClose(hFind);
+
+    if (GetLastError() != ERROR_NO_MORE_FILES) { // function fails because no more matching files can be found
+      FindClose(hFind);
+      return false;
+    }
+
+    FindClose(hFind);
+    hFind = INVALID_HANDLE_VALUE;
+  }
   return true;
 }
