@@ -2,10 +2,8 @@
 #include <string>
 #include "src/callback.h"
 
-bool QueryFile(
-    const std::wstring& wstrDir, void* retValue,
-    std::function<bool(const std::wstring&, HANDLE, WIN32_FIND_DATA, void*)>
-        file_callback) {
+               std::function<bool(const std::wstring&, WIN32_FIND_DATA,
+                                  void*)>  // 不要用 void*，用 struct
   if (wstrDir.empty()) {
     return false;
   }
