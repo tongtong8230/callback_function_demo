@@ -15,10 +15,10 @@ TEST(Callback, GetFileSize) {
   unsigned long long size = 0;
   unsigned long long* sizePtr = &size;
   auto lambda = [](const std::wstring& wstrDir,
-                   WIN32_FIND_DATA findData, void* sizePtr) -> bool {
+                   WIN32_FIND_DATA ffd, void* sizePtr) -> bool {
     unsigned long long* sizeULLPtr = (unsigned long long*)sizePtr;
     unsigned long long dwSize =
-        (findData.nFileSizeHigh * (MAXDWORD + 1)) + findData.nFileSizeLow;
+        (ffd.nFileSizeHigh * (MAXDWORD + 1)) + ffd.nFileSizeLow;
     *sizeULLPtr += dwSize;
     return true;
   };
