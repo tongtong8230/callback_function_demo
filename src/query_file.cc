@@ -16,9 +16,8 @@
   }
   do {
     if (wcscmp(findData.cFileName, L".") == 0 ||
-        wcscmp(findData.cFileName, L"..") == 0) {
+        wcscmp(findData.cFileName, L"..") == 0)
       continue;
-    }
 
     std::wstring wstrFileName;
     wstrFileName.assign(wstrDir);
