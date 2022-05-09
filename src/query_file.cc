@@ -2,12 +2,13 @@
 #include <string>
 #include "src/callback.h"
 
-               std::function<bool(const std::wstring&, WIN32_FIND_DATA,
-                                  void*)>  // 不要用 void*，用 struct
-  if (wstrDir.empty()) return false;
-
-  std::wstring wstrTempDir = wstrDir + (L"\\*");
+// 只要 queryfile 就好，其他事在 callback 裡面做
+bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
+               void* retValue,  // 不要用 void*，用 struct
+               std::function<bool(const std::wstring&, WIN32_FIND_DATA, void*)>
+                   file_callback) {
   WIN32_FIND_DATA ffd;
+  std::stack<std::wstring> directories;
   HANDLE hFind = FindFirstFile(wstrTempDir.c_str(), &ffd);
   if (hFind == INVALID_HANDLE_VALUE) return false;
   do {
