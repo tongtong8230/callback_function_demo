@@ -50,18 +50,3 @@ bool QueryFile(const std::wstring& wstrDir, DirectoryData* dirdata,
   return true;
 }
 
-/**
- * @brief
- *
- * @todo 要可以控制要不要 recursive 進去 /
- *
- */
-/*
-
-const unsigned long long FILE_MAX_LIMIT =
-          500000;  // 在 callback 做，callback 裡面寫
-      if (file_count > FILE_MAX_LIMIT) break;  // 在 callback 裡面寫
-
-              if (ret == false)
-          break;  // 如果 超多 count 就 return false，要可以 break 整個迴圈
-      */
