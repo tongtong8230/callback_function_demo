@@ -4,9 +4,9 @@
 #include "src/callback.h"
 
 // 只要 queryfile 就好，其他事在 callback 裡面做
-bool QueryFile(const std::wstring& wstrDir, DIRECTORYDATA* dirdata,
+bool QueryFile(const std::wstring& wstrDir, DirectoryData* dirdata,
                std::function<bool(const std::wstring&, const WIN32_FIND_DATA&,
-                                  DIRECTORYDATA*)>
+                                  DirectoryData*)>
                    FileCallback) {
   WIN32_FIND_DATA ffd;
   std::stack<std::wstring> directories;
