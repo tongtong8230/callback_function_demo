@@ -4,9 +4,10 @@
 
 // 只要 queryfile 就好，其他事在 callback 裡面做
 bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
-               void* retValue,  // 不要用 void*，用 struct
-               std::function<bool(const std::wstring&, WIN32_FIND_DATA, void*)>
-                   file_callback) {
+               DIRECTORYDATA* dirdata,
+               std::function<bool(const std::wstring&, const WIN32_FIND_DATA&,
+                                  DIRECTORYDATA*)>
+                   FileCallback) {
   WIN32_FIND_DATA ffd;
   std::stack<std::wstring> directories;
 

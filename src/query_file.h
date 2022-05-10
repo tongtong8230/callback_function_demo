@@ -3,9 +3,17 @@
 #include <windows.h>
 #include <functional>
 #include <iostream>
+// #include <stack>
 
-bool QueryFile(
-    const std::wstring& wstrDir, void* retValue,
-    std::function<bool(const std::wstring&, WIN32_FIND_DATA, void*)>
-        file_callback);
+bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
+               DIRECTORYDATA* dirdata,
+               std::function<bool(const std::wstring&, const WIN32_FIND_DATA&,
+                                  DIRECTORYDATA*)>
+                   FileCallback);
+
+struct DIRECTORYDATA {
+  unsigned long long file_count;
+  unsigned long long file_total_size;
+};
+
 #endif  // QUERY_FILE_H_
