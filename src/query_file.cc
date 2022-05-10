@@ -1,4 +1,5 @@
 #include "src/query_file.h"
+#include <stack>
 #include <string>
 #include "src/callback.h"
 
@@ -15,11 +16,11 @@ bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
   files.clear();
 
   while (!directories.empty()) {
-    std::wstring wstrPath = directories.top();
-    std::wstring wstrTempDir = wstrPath + (L"\\*");
+    std::wstring path = directories.top();
+    std::wstring temp_path = path + (L"\\*");
     directories.pop();
 
-    HANDLE hFind = FindFirstFile(wstrTempDir.c_str(), &ffd);
+    HANDLE hFind = FindFirstFile(temp_path.c_str(), &ffd);
 
     if (hFind == INVALID_HANDLE_VALUE) continue;
 
@@ -28,9 +29,11 @@ bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
         continue;
 
       if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {  // 是否是目錄
-        directories.push(wstrDir + L"\\" + ffd.cFileName);
+        directories.push(path + L"\\" + ffd.cFileName);
       } else {
-        files.push_back(wstrDir + L"\\" + ffd.cFileName);
+        std::wstring filename = path + L"\\" + ffd.cFileName;
+        // files.push_back(filename);
+        FileCallback(filename, ffd, dirdata);
       }
     } while (FindNextFile(hFind, &ffd) != 0);
 
