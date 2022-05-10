@@ -3,8 +3,8 @@
 #include <string>
 #include "src/callback.h"
 
-// 只要 queryfile 就好，其他事在 callback 裡面做
-bool QueryFile(const std::wstring& wstrDir, DirectoryData* dirdata,
+bool QueryFile(const std::wstring& wstrDir, directory_options options,
+               DirectoryData* dirdata,
                std::function<bool(const std::wstring&, const WIN32_FIND_DATA&,
                                   DirectoryData*)>
                    FileCallback) {
@@ -28,6 +28,9 @@ bool QueryFile(const std::wstring& wstrDir, DirectoryData* dirdata,
       if (wcscmp(ffd.cFileName, L".") == 0 || wcscmp(ffd.cFileName, L"..") == 0)
         continue;
       if (ffd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) continue;
+
+      if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY &&
+          options == directory_options::recursive_directory) {  // 是否是目錄
         directories.push(path + L"\\" + ffd.cFileName);
       } else {
         std::wstring filename = path + L"\\" + ffd.cFileName;

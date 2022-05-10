@@ -6,7 +6,9 @@
 TEST(Callback, CountFile) {
   DirectoryData dir_data;
   DirectoryData* dir_ptr = &dir_data;
-  auto ret = QueryFile(L"C:\\Users\\kikihuang\\Desktop", dir_ptr, CountFile);
+  auto ret =
+      QueryFile(L"C:\\Users\\kikihuang", directory_options::none,
+                dir_ptr, CountFile);
   std::cout << "File Count: " << dir_ptr->file_count << std::endl;
   ASSERT_EQ(ret, true);
 }
@@ -25,7 +27,8 @@ TEST(Callback, GetFileSize) {
     return true;
   };
 
-  auto ret = QueryFile(L"C:\\Users\\kikihuang\\Documents", dir_ptr, lambda);
+  auto ret = QueryFile(L"C:\\Users\\kikihuang\\Documents",
+                       directory_options::recursive_directory, dir_ptr, lambda);
   std::cout << "All Directory Size: " << dir_ptr->file_total_size << std::endl;
   ASSERT_EQ(ret, true);
 }

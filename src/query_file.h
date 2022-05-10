@@ -3,12 +3,17 @@
 #include <windows.h>
 #include <functional>
 #include <iostream>
-// #include <stack>
 
 typedef struct _DirectoryData {
   unsigned long long file_count = 0;
   unsigned long long file_total_size = 0;
-}DirectoryData;
+} DirectoryData;
+
+enum class directory_options {
+  none = 0,
+  recursive_directory = 1,
+  // skip_permission_denied = 2
+};
 
 /**
  * @brief
@@ -18,7 +23,8 @@ typedef struct _DirectoryData {
  * @param FileCallback a callback which will implement on these files
  * @return true
  */
-bool QueryFile(const std::wstring& wstrDir, DirectoryData* dirdata,
+bool QueryFile(const std::wstring& wstrDir, directory_options options,
+               DirectoryData* dirdata,
                std::function<bool(const std::wstring&, const WIN32_FIND_DATA&,
                                   DirectoryData*)>
                    FileCallback);
