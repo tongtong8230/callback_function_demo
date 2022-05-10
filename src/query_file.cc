@@ -31,8 +31,8 @@ bool QueryFile(const std::wstring& wstrDir, DirectoryData* dirdata,
         directories.push(path + L"\\" + ffd.cFileName);
       } else {
         std::wstring filename = path + L"\\" + ffd.cFileName;
-        // files.push_back(filename);
-        FileCallback(filename, ffd, dirdata);
+        if (!FileCallback(filename, ffd, dirdata))
+          return true;  // 超過 file count  // return true or false?
       }
     } while (FindNextFile(hFind, &ffd) != 0);
 
