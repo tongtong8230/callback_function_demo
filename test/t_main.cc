@@ -3,27 +3,26 @@
 #include "src/callback.h"
 #include "src/query_file.h"
 
-TEST(Callback, LogFile) {
-  int count = 0;
-  int* countPtr = &count;
-  auto ret = QueryFile(L"C:\\Users\\kikihuang\\Desktop", countPtr, CountFile);
-  std::cout << "File Count: " << count << std::endl;
+TEST(Callback, CountFile) {
+  DirectoryData dir_data;
+  DirectoryData* dir_ptr = &dir_data;
+  auto ret = QueryFile(L"C:\\Users\\kikihuang\\Desktop", dir_ptr, CountFile);
+  std::cout << "File Count: " << dir_ptr->file_count << std::endl;
   ASSERT_EQ(ret, true);
 }
 
 TEST(Callback, GetFileSize) {
-  unsigned long long size = 0;
-  unsigned long long* sizePtr = &size;
-  auto lambda = [](const std::wstring& wstrDir,
-                   WIN32_FIND_DATA ffd, void* sizePtr) -> bool {
-    unsigned long long* sizeULLPtr = (unsigned long long*)sizePtr;
+  DirectoryData dir_data;
+  DirectoryData* dir_ptr = &dir_data;
+  auto lambda = [](const std::wstring& wstrDir, const WIN32_FIND_DATA& ffd,
+                   DirectoryData* dir_ptr) -> bool {
     unsigned long long dwSize =
         (ffd.nFileSizeHigh * (MAXDWORD + 1)) + ffd.nFileSizeLow;
-    *sizeULLPtr += dwSize;
+    dir_ptr->file_total_size += dwSize;
     return true;
   };
 
-  auto ret = QueryFile(L"C:\\Users\\kikihuang\\Documents", sizePtr, lambda);
-  std::cout << "All Directory Size: " << *sizePtr << std::endl;
+  auto ret = QueryFile(L"C:\\Users\\kikihuang\\Documents", dir_ptr, lambda);
+  std::cout << "All Directory Size: " << dir_ptr->file_total_size << std::endl;
   ASSERT_EQ(ret, true);
 }
