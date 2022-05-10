@@ -36,9 +36,10 @@ bool QueryFile(const std::wstring& wstrDir, DirectoryData* dirdata,
       }
     } while (FindNextFile(hFind, &ffd) != 0);
 
-    if (GetLastError() !=
-        ERROR_NO_MORE_FILES) {  // function fails because no more matching files
-                                // can be found
+    if (GetLastError() != NO_ERROR &&
+        GetLastError() !=
+            ERROR_NO_MORE_FILES) {  // function fails because no more
+                                    // matching files can be found
       FindClose(hFind);
       return false;
     }
