@@ -5,8 +5,7 @@
 #include <iostream>
 // #include <stack>
 
-bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
-               DIRECTORYDATA* dirdata,
+bool QueryFile(const std::wstring& wstrDir, DIRECTORYDATA* dirdata,
                std::function<bool(const std::wstring&, const WIN32_FIND_DATA&,
                                   DIRECTORYDATA*)>
                    FileCallback);

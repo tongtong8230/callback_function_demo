@@ -4,8 +4,7 @@
 #include "src/callback.h"
 
 // 只要 queryfile 就好，其他事在 callback 裡面做
-bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
-               DIRECTORYDATA* dirdata,
+bool QueryFile(const std::wstring& wstrDir, DIRECTORYDATA* dirdata,
                std::function<bool(const std::wstring&, const WIN32_FIND_DATA&,
                                   DIRECTORYDATA*)>
                    FileCallback) {
@@ -13,7 +12,6 @@ bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
   std::stack<std::wstring> directories;
 
   directories.push(wstrDir);
-  files.clear();
 
   while (!directories.empty()) {
     std::wstring path = directories.top();
@@ -37,7 +35,9 @@ bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
       }
     } while (FindNextFile(hFind, &ffd) != 0);
 
-    if (GetLastError() != ERROR_NO_MORE_FILES) { // function fails because no more matching files can be found
+    if (GetLastError() !=
+        ERROR_NO_MORE_FILES) {  // function fails because no more matching files
+                                // can be found
       FindClose(hFind);
       return false;
     }
@@ -47,3 +47,19 @@ bool QueryFile(const std::wstring& wstrDir, std::vector<std::wstring>& files,
   }
   return true;
 }
+
+/**
+ * @brief
+ *
+ * @todo 要可以控制要不要 recursive 進去 /
+ *
+ */
+/*
+
+const unsigned long long FILE_MAX_LIMIT =
+          500000;  // 在 callback 做，callback 裡面寫
+      if (file_count > FILE_MAX_LIMIT) break;  // 在 callback 裡面寫
+
+              if (ret == false)
+          break;  // 如果 超多 count 就 return false，要可以 break 整個迴圈
+      */
