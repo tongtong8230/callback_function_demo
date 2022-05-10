@@ -21,13 +21,13 @@ bool QueryFile(const std::wstring& wstrDir, DirectoryData* dirdata,
     HANDLE hFind = FindFirstFile(temp_path.c_str(), &ffd);
 
     if (hFind == INVALID_HANDLE_VALUE) return false;
+    if (ffd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+      continue;  // 是否是 symbolic link
 
     do {
       if (wcscmp(ffd.cFileName, L".") == 0 || wcscmp(ffd.cFileName, L"..") == 0)
         continue;
-
-      if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {  // 是否是目錄
-        if (ffd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) continue;
+      if (ffd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) continue;
         directories.push(path + L"\\" + ffd.cFileName);
       } else {
         std::wstring filename = path + L"\\" + ffd.cFileName;
